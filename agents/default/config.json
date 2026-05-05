@@ -1,0 +1,6 @@
+{
+  "name": "default",
+  "description": "General purpose AI assistant",
+  "model": "llama3.2",
+  "max_context": 20
+}
