@@ -36,20 +36,20 @@ async def generate_session_title(company_id: int, session_id: int, first_message
     clean_title = title.replace('"', '').replace("'", "").strip()
     update_session_title(session_id, clean_title, company_id)
 
-@router.get("/sessions")
+@router.get("/chat/sessions")
 def get_chat_sessions(company_id: int = 1, agent: str = "Orion"):
     return get_sessions(company_id, agent)
 
-@router.get("/messages")
+@router.get("/chat/messages")
 def get_session_messages(session_id: int, company_id: int = 1):
     return get_messages(session_id, company_id, limit=100)
 
-@router.put("/sessions/{session_id}")
+@router.put("/chat/sessions/{session_id}")
 def rename_chat_session(session_id: int, req: SessionUpdate, company_id: int = 1):
     update_session_title(session_id, req.title, company_id)
     return {"status": "success"}
 
-@router.delete("/sessions/{session_id}")
+@router.delete("/chat/sessions/{session_id}")
 def delete_chat_session(session_id: int, company_id: int = 1):
     delete_session(session_id, company_id)
     if session_id in active_sessions:
@@ -98,8 +98,9 @@ async def chat_endpoint(req: ChatRequest, background_tasks: BackgroundTasks):
 
 ## GUIDELINES
 - REASONING: You MUST enclose your internal thought process in <reasoning> tags before taking any action or answering.
+- LAZINESS: Do NOT use any skills unless explicitly requested by the user or strictly necessary to answer their current query. For casual conversation (like "hello"), respond naturally WITHOUT calling any tools.
 - CONFIRMATION: If a request is ambiguous or high-impact (like deleting), ask for specific confirmation before taking action.
-- NOTIFICATION: After executing a skill and receiving a SKILL_RESULT, you MUST tell the user exactly what you have done in clear, natural language.
+- DATA PRESENTATION: When you receive data from a skill execution, you MUST present the relevant data clearly and beautifully to the user. Do not simply state that you ran the skill; actually show the retrieved information.
 """
     
     skill_list_str = ", ".join(skills)
@@ -155,7 +156,7 @@ Example:
 
             # Add to session
             session.append({"role": "assistant", "content": reply})
-            session.append({"role": "user", "content": f"SKILL_RESULT:\n{result}\n\nINSTRUCTION: Using the result above, answer my previous request. You MUST present the actual data/information retrieved to me clearly. Do NOT just say 'I retrieved the data'—actually show me the data."})
+            session.append({"role": "user", "content": f"[SYSTEM NOTIFICATION: Skill executed successfully]\n\nDATA RETRIEVED:\n{result}\n\nPlease present this data to me to fulfill my request."})
             loop_count += 1
             continue
         else:
