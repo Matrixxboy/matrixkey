@@ -1,0 +1,6 @@
+{
+  "name": "Nova",
+  "description": "Software Engineering and Code Architecture Specialist.",
+  "model": "llama3.2",
+  "max_context": 30
+}

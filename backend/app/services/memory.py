@@ -28,17 +28,17 @@ def save_embedding(message_id: int, text: str):
     conn.commit()
     conn.close()
 
-def search_memory(agent: str, query: str, limit: int = 5):
+def search_memory(agent: str, query: str, limit: int = 5, company_id: int = 1):
     query_embedding = np.frombuffer(generate_embedding(query), dtype=np.float32)
     
     conn = get_db_connection()
-    # Fetch all embeddings for this agent's messages
+    # Fetch all embeddings for this agent's messages within the same company
     rows = conn.execute("""
         SELECT m.content, m.role, m.ts, e.embedding 
         FROM messages m
         JOIN embeddings e ON m.id = e.message_id
-        WHERE m.agent = ?
-    """, (agent,)).fetchall()
+        WHERE m.agent = ? AND m.company_id = ?
+    """, (agent, company_id)).fetchall()
     conn.close()
     
     if not rows:

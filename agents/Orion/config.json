@@ -1,0 +1,6 @@
+{
+  "name": "Orion",
+  "description": "Primary OS Orchestrator and General Intelligence.",
+  "model": "llama3.2",
+  "max_context": 20
+}

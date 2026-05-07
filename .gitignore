@@ -4,3 +4,7 @@ __pycache__
 
 # node
 node_modules
+
+
+# database
+/memory/conversations.db

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from app.api.endpoints import chat, agents, memory
+from app.api.endpoints import chat, agents, memory, workspace, orchestrator, company, skills
 from app.db.database import init_db
 from app.services.ollama import list_local_models
 
@@ -27,6 +27,10 @@ app.add_middleware(
 app.include_router(chat.router, tags=["Chat"])
 app.include_router(agents.router, prefix="/agents", tags=["Agents"])
 app.include_router(memory.router, prefix="/memory", tags=["Memory"])
+app.include_router(workspace.router, prefix="/workspace", tags=["Workspace"])
+app.include_router(orchestrator.router, prefix="/orchestrator", tags=["Orchestrator"])
+app.include_router(company.router, prefix="/company", tags=["Company"])
+app.include_router(skills.router, prefix="/skills", tags=["Skills"])
 
 @app.get("/health")
 def health_check():

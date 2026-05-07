@@ -1,0 +1,6 @@
+{
+  "name": "Atlas",
+  "description": "Information Retrieval and Data Synthesis Specialist.",
+  "model": "llama3.2",
+  "max_context": 25
+}
